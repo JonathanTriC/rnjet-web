@@ -1,26 +1,162 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+	--font-heading: "Montserrat", sans-serif;
+	--font-body: "Montserrat", sans-serif;
+
+	--color-background: hsl(216 28% 7%);
+	--color-foreground: hsl(0 0% 100%);
+
+	--color-card: hsl(215 27% 11%);
+	--color-card-foreground: hsl(0 0% 100%);
+
+	--color-popover: hsl(215 27% 11%);
+	--color-popover-foreground: hsl(0 0% 100%);
+
+	--color-primary: hsl(199 89% 56%);
+	--color-primary-foreground: hsl(216 28% 7%);
+
+	--color-secondary: hsl(217 19% 17%);
+	--color-secondary-foreground: hsl(0 0% 100%);
+
+	--color-muted: hsl(217 19% 17%);
+	--color-muted-foreground: hsl(215 20% 65%);
+
+	--color-accent: hsl(199 89% 56%);
+	--color-accent-foreground: hsl(216 28% 7%);
+
+	--color-destructive: hsl(0 84% 60%);
+	--color-destructive-foreground: hsl(0 0% 100%);
+
+	--color-border: hsl(210 30% 18%);
+	--color-input: hsl(210 30% 18%);
+	--color-ring: hsl(199 89% 56%);
+
+	--radius: 0.5rem;
+	--radius-lg: var(--radius);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 4px);
+
+	--color-sidebar: hsl(216 28% 7%);
+	--color-sidebar-foreground: hsl(215 20% 65%);
+	--color-sidebar-primary: hsl(199 89% 56%);
+	--color-sidebar-primary-foreground: hsl(216 28% 7%);
+	--color-sidebar-accent: hsl(217 19% 17%);
+	--color-sidebar-accent-foreground: hsl(0 0% 100%);
+	--color-sidebar-border: hsl(210 30% 18%);
+	--color-sidebar-ring: hsl(199 89% 56%);
+
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+	--animate-glow-pulse: glow-pulse 4s ease-in-out infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes accordion-down {
+	from {
+		height: 0;
+	}
+	to {
+		height: var(--radix-accordion-content-height);
+	}
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes accordion-up {
+	from {
+		height: var(--radix-accordion-content-height);
+	}
+	to {
+		height: 0;
+	}
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes glow-pulse {
+	0%,
+	100% {
+		opacity: 0.6;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@keyframes hero-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@layer base {
+	* {
+		border-color: var(--color-border);
+	}
+
+	body {
+		background-color: var(--color-background);
+		color: var(--color-foreground);
+		font-family: var(--font-body);
+		-webkit-font-smoothing: antialiased;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-heading);
+	}
+}
+
+@layer utilities {
+	.font-heading {
+		font-family: var(--font-heading);
+	}
+	.font-body {
+		font-family: var(--font-body);
+	}
+
+	.hero-fade-1 {
+		animation: hero-fade-in 0.6s ease-out 0.1s both;
+	}
+	.hero-fade-2 {
+		animation: hero-fade-in 0.6s ease-out 0.25s both;
+	}
+	.hero-fade-3 {
+		animation: hero-fade-in 0.6s ease-out 0.4s both;
+	}
+	.hero-fade-4 {
+		animation: hero-fade-in 0.6s ease-out 0.55s both;
+	}
+	.hero-fade-5 {
+		animation: hero-fade-in 0.6s ease-out 0.7s both;
+	}
+
+	.noise-overlay {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 0;
+		opacity: 0.04;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+		background-repeat: repeat;
+	}
+
+	.bg-noise {
+		position: fixed;
+		inset: 0;
+		z-index: 50;
+		pointer-events: none;
+		opacity: 0.03;
+		background-image: var(--bg-noise);
+	}
+
+	.animate-glow-pulse {
+		animation: var(--animate-glow-pulse);
+	}
 }
