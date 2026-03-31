@@ -1,0 +1,145 @@
+---
+title: API Layer
+description: How the Axios-based API layer works in RNJet.
+---
+
+# API Layer
+
+RNJet's API layer lives in `src/api/` and provides typed wrappers around Axios with built-in logging, retry, and token handling.
+
+---
+
+## File Structure
+
+```
+src/api/
+├── client.ts             # Axios instance (with auth token)
+├── clientWithoutToken.ts # Axios instance (public endpoints)
+├── apiWrapping.ts        # Request/response wrapping and interceptors
+├── apiUtils.ts           # logApi + curl generator
+├── apiType.d.ts          # Shared types (ApiProps, ApiError, etc.)
+└── index.ts              # Export definition
+```
+
+---
+
+## Two Clients
+
+| Client               | Use for                                                                |
+| -------------------- | ---------------------------------------------------------------------- |
+| `client`             | Authenticated requests — auto-attaches `Authorization: Bearer <token>` |
+| `clientWithoutToken` | Public requests — login, register, etc.                                |
+
+To attach a token, update the request interceptor in `client.ts`:
+
+```ts
+// src/api/client.ts
+client.interceptors.request.use(async (config) => {
+	const token = await handlerGetItem(Keys.userToken); // from MMKV
+	if (token) {
+		config.headers.Authorization = "Bearer " + token;
+	}
+	return config;
+});
+```
+
+---
+
+## ApiProps
+
+All API functions accept a single `ApiProps` object:
+
+| Prop           | Type                 | Description                                  |
+| -------------- | -------------------- | -------------------------------------------- |
+| `url`          | `string`             | Endpoint path (no base URL needed)           |
+| `body`         | `any`                | Request body (POST only)                     |
+| `tags`         | `string`             | Label for logs — omit to silence logging     |
+| `retry`        | `number`             | Auto-retry count on failure                  |
+| `headers`      | `any`                | Extra request headers                        |
+| `config`       | `AxiosRequestConfig` | Additional Axios config                      |
+| `fullResponse` | `boolean`            | Return full Axios response instead of `data` |
+| `resHeaders`   | `boolean`            | Return response headers instead of `data`    |
+
+---
+
+## Making API Calls
+
+**GET (authenticated):**
+
+```ts
+import { apiGet } from "@/api";
+import { URL_PATH } from "@/constants/url";
+
+const data = await apiGet<UserProfile>({ url: URL_PATH.user.profile });
+```
+
+**GET (public):**
+
+```ts
+const data = await apiGetWithoutToken({ url: URL_PATH.auth.verify });
+```
+
+**POST (public — e.g. login/register):**
+
+```ts
+const data = await apiPostWithoutToken({
+	url: URL_PATH.auth.register,
+	body: { name, email, password },
+	tags: "registerAuth",
+});
+```
+
+**POST (authenticated):**
+
+```ts
+const data = await apiPost({
+	url: URL_PATH.user.updateProfile,
+	body: { name },
+	tags: "updateProfile",
+});
+```
+
+**With retry:**
+
+```ts
+apiGet({ url: URL_PATH.user.profile, retry: 2 }); // retries up to 2x on failure
+```
+
+---
+
+## Error Handling
+
+All functions reject with a normalized `ApiError` object:
+
+```ts
+type ApiError<T = unknown> = {
+	success: boolean;
+	message: string;
+	errors?: T; // typed per endpoint e.g. ApiError<AuthErrorResponse[]>
+};
+```
+
+Use it with TanStack Query's `onError`:
+
+```ts
+useMutation<RegisterResponse, ApiError<AuthErrorResponse[]>>({
+  mutationFn: async () => { ... },
+  onError: (error) => {
+    console.log(error.message);
+    console.log(error.errors?.[0]?.field);
+  },
+});
+```
+
+---
+
+## Logging
+
+Pass a `tags` string to any API call to enable logging. The `logApi` utility will print status code, URL, request body, response data, and a ready-to-copy **curl command** to the console.
+
+```ts
+apiGet({ url: URL_PATH.user.profile, tags: "fetchProfile" });
+// → logs: fetchProfile statusCode, url, body, data + curl
+```
+
+Omit `tags` to silence all logs for that call.

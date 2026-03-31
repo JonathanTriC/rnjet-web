@@ -1,0 +1,94 @@
+---
+title: iOS
+description: Run your RNJet app on iOS using Xcode schemes.
+---
+
+# Running on iOS
+
+iOS uses **Xcode schemes** instead of CLI scripts to differentiate between Development and Production environments.
+
+---
+
+## Prerequisites
+
+Before running on iOS, install CocoaPods dependencies:
+
+```bash
+make menu
+# → 2. Run pod install (iOS)
+```
+
+Or manually:
+
+```bash
+cd ios && pod install && cd ..
+```
+
+---
+
+## Running via Xcode
+
+1. Open the workspace file in Xcode:
+
+```bash
+open ios/YourProject.xcworkspace
+```
+
+<Callout type="warn">
+	Always open the `.xcworkspace` file, **not** the `.xcodeproj` file. Opening the
+	wrong one will cause CocoaPods dependencies to not be found.
+</Callout>
+
+2. Select your scheme from the scheme picker at the top:
+
+| Scheme    | Environment        |
+| --------- | ------------------ |
+| `Dev App` | `.env.development` |
+| `App`     | `.env.production`  |
+
+3. Select your target device or simulator.
+
+4. Press **⌘ + R** to run.
+
+---
+
+## Plist Setup (Important)
+
+RNJet generates two additional plist files alongside `Info.plist`:
+
+- `Info-Dev.plist`
+- `Info-Prod.plist`
+
+You **must** add these to Xcode manually or Dev/Prod behavior will be inconsistent.
+
+### Steps
+
+1. Right-click your project in the Xcode file navigator
+2. Select **Add Files to [ProjectName]**
+3. Select both `Info-Dev.plist` and `Info-Prod.plist`
+4. ✅ Check **"Copy items if needed"**
+5. Click **Add**
+
+<Callout type="warn">
+	Whenever you edit `Info.plist` (adding permissions, URL schemes, etc.),
+	remember to apply the same changes to both `Info-Dev.plist` and
+	`Info-Prod.plist`.
+</Callout>
+
+---
+
+## Troubleshooting
+
+**Build failing after `pod install`?**
+
+Try a clean pod install:
+
+```bash
+cd ios
+rm -rf Pods Podfile.lock
+pod install
+```
+
+**Scheme not visible in Xcode?**
+
+Go to **Product → Scheme → Manage Schemes** and make sure both `Dev App` and `App` are listed and have the **Shared** checkbox checked.

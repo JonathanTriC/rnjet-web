@@ -1,0 +1,82 @@
+---
+title: Installation
+description: Bootstrap your React Native app with a single command.
+---
+
+# Installation
+
+## Requirements
+
+Before running RNJet, make sure you have the React Native development environment set up on your machine.
+
+- Node.js 18+
+- React Native CLI environment ([official guide](https://reactnative.dev/docs/environment-setup))
+- For iOS: macOS with Xcode installed
+- For Android: Android Studio with an emulator or physical device
+
+---
+
+## Create a New Project
+
+Run the following command and follow the interactive prompts:
+
+```bash
+npx @jonathantri/rnjet init
+```
+
+RNJet will ask you for:
+
+- **1. App Display Name (e.g. My App):** — the name shown on your home screen
+- **2. Project Name (PascalCase) (e.g. MyApp):** — used for native project references
+- **3. Folder Name (kebab-case) (e.g. my-app):** — the root directory name
+- **4. Bundle Identifier (e.g. com.example.myapp):** — unique identifier for your app on stores
+- **5. Install dependencies?** — whether to automatically install npm packages
+
+Once confirmed, it will scaffold the full project structure, install dependencies, and set up environments automatically.
+
+---
+
+## What Gets Generated
+
+After `init` completes, your project will include:
+
+```
+YourApp/
+├── src/
+│   ├── api/
+│   ├── assets/
+│   ├── components/
+│   ├── constants/
+│   ├── hooks/
+│   ├── i18n/
+│   ├── modules/
+│   ├── navigation/
+│   ├── theme/
+│   └── types/
+├── .env.development
+├── .env.production
+├── Makefile
+└── ...
+```
+
+---
+
+## Next Steps
+
+<Cards>
+	<Card
+		title="Project Structure"
+		href="/docs/architecture/project-structure"
+		description="Understand the folder layout and where things live."
+	/>
+	<Card
+		title="Running the App"
+		href="/docs/running/android"
+		description="Run your app on Android or iOS."
+	/>
+	<Card
+		title="Environment Config"
+		href="/docs/environment/configuration"
+		description="Configure dev and production environments."
+	/>
+</Cards>

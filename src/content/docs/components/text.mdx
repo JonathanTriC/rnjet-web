@@ -1,0 +1,96 @@
+---
+title: Text
+description: Typed, theme-aware text component for RNJet.
+---
+
+# Text
+
+A drop-in replacement for React Native's `Text` — with built-in theming, typography scale, and i18n support.
+
+---
+
+## Props
+
+| Prop        | Type                     | Default        | Description                                             |
+| ----------- | ------------------------ | -------------- | ------------------------------------------------------- |
+| `type`      | `TextType`               | `regular-base` | Typography variant (size + weight + line height)        |
+| `color`     | `ColorProp`              | `text.primary` | Theme color token                                       |
+| `trans`     | `TranslationKey`         | —              | i18n key — renders translated string                    |
+| `text`      | `string`                 | —              | Plain string shorthand                                  |
+| `textAlign` | `TextStyle['textAlign']` | —              | Text alignment                                          |
+| `children`  | `ReactNode`              | —              | Inline content                                          |
+| `style`     | `TextStyle`              | —              | Override styles (note: disables `lineHeight` from type) |
+
+All other React Native `TextProps` are supported via spread.
+
+---
+
+## Usage
+
+**With i18n key:**
+
+```tsx
+<Text trans="welcome:greeting" />
+```
+
+**With plain string:**
+
+```tsx
+<Text text="Hello World" />
+```
+
+**With children:**
+
+```tsx
+<Text>Hello World</Text>
+```
+
+**With type and color:**
+
+```tsx
+<Text type="bold-2xl" color="text.primary">
+	RNJet
+</Text>
+```
+
+**With alignment:**
+
+```tsx
+<Text type="regular-sm" textAlign="center" color="text.secondary">
+	Subtitle here
+</Text>
+```
+
+---
+
+## Typography Types
+
+The `type` prop controls `fontFamily`, `fontSize`, `fontWeight`, and `lineHeight` together — all defined in `src/theme/text-theme.ts`. Convention is `{weight}-{size}`:
+
+```
+bold-2xl     bold-xl      bold-lg       bold-base      bold-sm      bold-xs       bold-2xs
+regular-2xl  regular-xl   regular-lg    regular-base   regular-sm   regular-xs    regular-2xs
+light-2xl    light-xl     light-lg      light-base     light-sm     light-xs      light-2xs
+```
+
+---
+
+## Color Tokens
+
+The `color` prop accepts a dot-notation theme color token resolved from the active theme (light/dark):
+
+```tsx
+<Text color="text.primary" />    // main text
+<Text color="text.secondary" />  // muted text
+<Text color="error.default" />   // error state
+```
+
+Tokens are defined in `src/theme/light.ts` and `src/theme/dark.ts`.
+
+---
+
+## Notes
+
+- `trans` takes priority over `text`, which takes priority over `children`
+- `allowFontScaling` is always `false` — prevents system font size from breaking layouts
+- Passing a custom `style` disables the automatic `lineHeight` from the `type` so it doesn't conflict with your override

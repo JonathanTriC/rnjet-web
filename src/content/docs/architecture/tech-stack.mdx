@@ -1,0 +1,327 @@
+---
+title: Tech Stack
+description: All core packages included in RNJet and why they were chosen.
+---
+
+# Tech Stack
+
+RNJet is built on a carefully selected set of packages that cover everything a production React Native app needs. All packages support **React Native's New Architecture** (Fabric + JSI).
+
+---
+
+## Core
+
+### React Native + TypeScript
+
+TypeScript is configured out of the box. You get full IDE support, type safety, and a better developer experience from day one — no extra setup required.
+
+---
+
+## Navigation
+
+RNJet uses **React Navigation** with a nested stack structure. The app is split into two root stacks — `CommonStack` for onboarding screens, and `MainStack` for the main app.
+
+```
+Navigator (root)
+├── Common → CommonStack
+└── Main   → MainStack
+```
+
+### Adding a New Screen
+
+**1. Add the screen to the stack's ParamList:**
+
+```ts
+// src/navigation/navigator/stack/main-stack/MainStackParamList.d.ts
+type ProfileStackParamList {
+  userId?: string;
+}
+type MainStackParamList = {
+  HomeScreen: undefined;
+  ProfileScreen: ProfileStackParamList; // ← add here if you need to pass params to the screen
+};
+```
+
+**2. Register the screen in the stack:**
+
+```tsx
+// src/navigation/navigator/stack/main-stack/MainStack.tsx
+import { ProfileScreen } from "@modules";
+
+<Stack.Screen name="ProfileScreen" component={ProfileScreen} />;
+```
+
+That's it — the screen is now navigable.
+
+### Adding a New Stack
+
+If you need a new group of screens (e.g. a auth flow), create a new stack and register it in the root `ParamList` and `Navigator`:
+
+**1. Add to the root ParamList:**
+
+```ts
+// src/navigation/navigator/screen.ts
+export type ParamList = {
+	Common: NavigatorScreenParams<CommonStackParamList>;
+	Main: NavigatorScreenParams<MainStackParamList>;
+	Auth: NavigatorScreenParams<AuthStackParamList>; // ← add here
+};
+```
+
+**2. Register in Navigator:**
+
+```tsx
+// src/navigation/navigator/Navigator.tsx
+<Stack.Screen name="Auth" component={AuthStack} />
+```
+
+### Navigating Between Screens
+
+Use the `useNavigate` hook — never call `useNavigation()` directly:
+
+```ts
+import { useNavigate } from "@/hooks";
+
+const { navigateScreen, popScreen, resetNavigate, getRouteParams } =
+	useNavigate();
+```
+
+**Go to a screen:**
+
+```ts
+// Screen in Main stack
+navigateScreen("Main", { screen: "HomeScreen" });
+
+// Screen with params
+navigateScreen("Main", { screen: "ProfileScreen", params: { userId: "123" } });
+```
+
+**Go back:**
+
+```ts
+popScreen();
+```
+
+**Reset navigation (e.g. after login/logout):**
+
+```ts
+resetNavigate("Main", { screen: "HomeScreen" });
+```
+
+**Get params from the current screen:**
+
+```ts
+const { userId } = getRouteParams<ProfileStackParamList>();
+```
+
+---
+
+## Data Fetching
+
+RNJet combines **TanStack Query** for server state management with a custom **Axios-based API layer** that handles logging, retries, and token auth out of the box.
+
+### API Functions
+
+All API calls go through wrapper functions in `src/api/`. There are two clients — `client` (with auth token) and `clientWithoutToken` — and four functions:
+
+| Function              | Method | Auth          |
+| --------------------- | ------ | ------------- |
+| `apiGet`              | GET    | ✅ With token |
+| `apiGetWithoutToken`  | GET    | ❌ Public     |
+| `apiPost`             | POST   | ✅ With token |
+| `apiPostWithoutToken` | POST   | ❌ Public     |
+
+All functions accept an `ApiProps` object and support built-in **retry** on failure.
+
+### URL Constants
+
+Define all URLs in `src/constants/url.ts`:
+
+```ts
+export const URL_PATH = {
+	auth: {
+		register: `api/auth/register`,
+	},
+	user: {
+		profile: `api/user/profile`,
+	},
+};
+```
+
+The `BASE_URL` is pulled automatically from `Config.API_URL` via `react-native-config`.
+
+### Usage with TanStack Query
+
+**Mutation (POST without token — e.g. register/login):**
+
+```ts
+import { apiPostWithoutToken } from "@/api";
+import { URL_PATH } from "@/constants/url";
+
+const { mutate: submitRegister } = useMutation<RegisterResponse, ApiError>({
+	mutationFn: async () => {
+		const data = await apiPostWithoutToken({
+			url: URL_PATH.auth.register,
+			body: { name, email, password },
+			tags: "registerAuth", // for logging
+		});
+		return data?.data;
+	},
+	onSuccess: (data) => {
+		/* handle success */
+	},
+	onError: (data) => {
+		/* handle error */
+	},
+});
+```
+
+**Query (GET with token — e.g. fetch profile):**
+
+```ts
+import { apiGet } from "@/api";
+import { URL_PATH } from "@/constants/url";
+
+const { data, isLoading } = useQuery({
+	queryKey: ["profile"],
+	queryFn: () => apiGet({ url: URL_PATH.user.profile }),
+});
+```
+
+**With retry on failure:**
+
+```ts
+apiGet({ url: URL_PATH.user.profile, retry: 2 }); // retries up to 2 times
+```
+
+---
+
+## Storage
+
+RNJet uses **react-native-mmkv** — fast, synchronous, encrypted key-value storage. The instance is pre-configured with AES-256 encryption in `src/constants/storage.ts`.
+
+### Storage Functions
+
+| Function                         | Description                |
+| -------------------------------- | -------------------------- |
+| `handlerGetItem(key)`            | Get a string value         |
+| `handlerGetAndParseJSON<T>(key)` | Get and parse a JSON value |
+| `handlerSetItem(key, value)`     | Set a string value         |
+| `handlerRemoveItem(key)`         | Remove a single key        |
+| `handlerClearItem()`             | Clear all storage          |
+
+### Keys
+
+All storage keys are defined in `src/constants/keys.ts` — never use raw strings directly:
+
+```ts
+// src/constants/keys.ts
+export const Keys = {
+	authToken: "auth_token",
+	userProfile: "user_profile",
+};
+```
+
+### Usage
+
+```ts
+import {
+	handlerSetItem,
+	handlerGetItem,
+	handlerGetAndParseJSON,
+	handlerRemoveItem,
+} from "@/constants/storage";
+import { Keys } from "@/constants/keys";
+
+// Set
+await handlerSetItem(Keys.authToken, token);
+
+// Get string
+const token = handlerGetItem(Keys.authToken);
+
+// Get parsed object
+const profile = handlerGetAndParseJSON<UserProfile>(Keys.userProfile);
+
+// Remove
+await handlerRemoveItem(Keys.authToken);
+```
+
+---
+
+## Internationalization
+
+RNJet uses **i18next** with a typed wrapper hook `useTypedTranslation` — so translation keys are fully autocompleted and type-safe. Ships with English (`en`) and Indonesian (`id`) out of the box.
+
+### Usage
+
+```ts
+const { translate, i18n } = useTypedTranslation();
+
+// Translate a key
+translate("welcome:greeting");
+
+// Switch language
+i18n.changeLanguage("id"); // or 'en'
+```
+
+### In JSX
+
+Two ways to render a translation:
+
+```tsx
+// Via Text component's trans prop (shorthand)
+<Text trans="welcome:greeting" />
+
+// Via translate function
+<Text>{translate('welcome:greeting')}</Text>
+```
+
+### Toggle Language
+
+```ts
+const toggleLanguage = () => {
+	const nextLang = i18n.language === "en" ? "id" : "en";
+	i18n.changeLanguage(nextLang);
+};
+```
+
+### Adding a New Translation Key
+
+Translation keys follow the `namespace:key` pattern. Add to both locale files:
+
+```json
+// src/i18n/locales/en.json
+{ "welcome": { "greeting": "Welcome to RNJet" } }
+
+// src/i18n/locales/id.json
+{ "welcome": { "greeting": "Selamat datang di RNJet" } }
+```
+
+Then use it as `welcome:greeting`.
+
+---
+
+## Environment
+
+### react-native-config
+
+Loads environment variables from `.env.development` and `.env.production` at build time. Fully integrated with Android flavors and iOS schemes so the right config is always used.
+
+```ts
+import Config from "react-native-config";
+
+const baseURL = Config.API_URL;
+```
+
+---
+
+## New Architecture Support
+
+All packages in RNJet's stack are compatible with React Native's New Architecture:
+
+| Feature               | Status        |
+| --------------------- | ------------- |
+| Fabric (new renderer) | ✅ Supported  |
+| JSI (JS Interface)    | ✅ Supported  |
+| Bridgeless mode       | ✅ Compatible |
+| TurboModules          | ✅ Compatible |

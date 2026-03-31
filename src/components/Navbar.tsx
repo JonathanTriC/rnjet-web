@@ -1,5 +1,6 @@
 import { Moon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = () => {
 	return (
@@ -18,12 +19,12 @@ const Navbar = () => {
 					</span>
 				</div>
 				<div className="flex items-center gap-6">
-					<a
-						href="#"
+					<Link
+						href="/docs"
 						className="text-sm font-body font-medium text-primary hover:text-primary/80 transition-colors"
 					>
 						Docs
-					</a>
+					</Link>
 					<a
 						href="https://github.com/jonathantric/rnjet-boilerplate/"
 						target="_blank"

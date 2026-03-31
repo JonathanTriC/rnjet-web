@@ -1,0 +1,103 @@
+---
+title: Android
+description: Run and build your RNJet app on Android.
+---
+
+# Running on Android
+
+RNJet supports two environments for Android: **Development** and **Production**. These map to separate Android flavors with their own configs, app names, and environment variables.
+
+---
+
+## Using the Interactive Menu (Recommended)
+
+RNJet ships with a `Makefile` that gives you an interactive menu — no need to memorize commands:
+
+```bash
+make menu
+```
+
+You'll see:
+
+```
+Choose an option:
+1. Start Metro with cache reset
+2. Run pod install (iOS)
+3. Run Android Development Debug
+4. Run Android Production Debug
+5. Build Android Development APK
+6. Build Android Production APK
+
+Enter number:
+```
+
+Pick the number for what you need and hit Enter.
+
+---
+
+## Manual Commands
+
+If you prefer running commands directly:
+
+### Run
+
+```bash
+# Development
+yarn android:dev
+
+# Production
+yarn android:prod
+```
+
+### Build APK
+
+```bash
+# Development APK
+yarn build:android-dev
+
+# Production APK
+yarn build:android-prod
+
+# Production ABB
+yarn build:aab-prod
+```
+
+---
+
+## Android Flavors
+
+RNJet configures two Android product flavors in `android/app/build.gradle`:
+
+| Flavor | Environment        | App Name       |
+| ------ | ------------------ | -------------- |
+| `dev`  | `.env.development` | [DEV] Your App |
+| `prod` | `.env.production`  | Your App       |
+
+This means you can install both the dev and prod versions on the same device simultaneously during testing.
+
+---
+
+## Troubleshooting
+
+**Metro not starting?**
+
+Use the menu option 1 to start Metro with cache reset:
+
+```bash
+make menu
+# → 1. Start Metro with cache reset
+```
+
+Or manually:
+
+```bash
+yarn start --reset-cache
+```
+
+**Build failing on first run?**
+
+Make sure you've run a sync first:
+
+```bash
+cd android && ./gradlew clean && cd ..
+```

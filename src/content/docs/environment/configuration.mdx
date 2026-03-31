@@ -1,0 +1,114 @@
+---
+title: Environment Configuration
+description: Manage development and production environment variables in RNJet.
+---
+
+# Environment Configuration
+
+RNJet uses `react-native-config` to manage environment variables. Two `.env` files are generated automatically when you run `rnjet init`:
+
+```
+.env.development
+.env.production
+```
+
+---
+
+## File Structure
+
+```bash
+# .env.development
+APP_NAME=YourApp
+APP_NAME_PREFIX=[DEV]
+BUNDLE_ID=com.app.yourapp.dev
+BUNDLE_ID_SUFFIX=.dev
+API_URL=https://dev.api.example.com
+ENV=development
+APP_ICON=AppIconDev
+
+
+# .env.production
+APP_NAME=YourApp
+APP_NAME_PREFIX=
+BUNDLE_ID=com.app.yourapp
+BUNDLE_ID_SUFFIX=
+API_URL=https://api.example.com
+ENV=production
+APP_ICON=AppIcon
+
+```
+
+---
+
+## Accessing Variables
+
+Import `Config` from `react-native-config` anywhere in your app:
+
+```ts
+import Config from "react-native-config";
+
+console.log(Config.API_URL); // https://dev.api.example.com (in dev)
+console.log(Config.ENV); // development
+```
+
+---
+
+## How Environments Are Selected
+
+RNJet wires environments to build targets automatically:
+
+| Platform | Mechanism       | Dev Config         | Prod Config       |
+| -------- | --------------- | ------------------ | ----------------- |
+| Android  | Product Flavors | `.env.development` | `.env.production` |
+| iOS      | Xcode Schemes   | `.env.development` | `.env.production` |
+
+You never need to manually switch files — just run the correct flavor or scheme and the right config is used.
+
+---
+
+## Adding New Variables
+
+1. Add the variable to both `.env.development` and `.env.production`:
+
+```bash
+# .env.development
+API_KEY=key_dev_xxxx
+
+# .env.production
+API_KEY=key_prod_xxxx
+```
+
+2. For TypeScript support, declare the variable in a type definition file:
+
+```ts
+// src/types/env.d.ts
+declare module "react-native-config" {
+	interface NativeConfig {
+		APP_NAME: string;
+		API_URL: string;
+		ENV: string;
+		API_KEY: string; // ← add new vars here
+	}
+}
+```
+
+3. Use it:
+
+```ts
+import Config from "react-native-config";
+const apiKey = Config.API_KEY;
+```
+
+---
+
+## Rebuilding After Changes
+
+Environment variables are baked in at **build time**, not runtime. After editing `.env` files you must rebuild:
+
+```bash
+# Android
+yarn android:dev
+
+# iOS
+# Clean build in Xcode: Product → Clean Build Folder (⇧ + ⌘ + K), then ⌘ + R
+```

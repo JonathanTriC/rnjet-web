@@ -1,6 +1,7 @@
 "use client";
 
 import { Copy, Check, BookOpen, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 const HeroSection = () => {
@@ -37,7 +38,7 @@ const HeroSection = () => {
 							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
 							<span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
 						</span>
-						v1.0.3 is now available
+						v1.1.0 is now available
 						<ArrowRight size={14} />
 					</a>
 				</div>
@@ -85,13 +86,13 @@ const HeroSection = () => {
 
 				{/* Two CTA buttons */}
 				<div className="hero-fade-5 flex items-center justify-center gap-4 flex-wrap">
-					<a
-						href="#"
+					<Link
+						href="/docs"
 						className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-medium transition-all shadow-lg shadow-sky-500/20 tracking-tight text-sm"
 					>
 						Read the Docs
 						<BookOpen size={16} />
-					</a>
+					</Link>
 					<a
 						href="https://github.com/jonathantric/rnjet-boilerplate/"
 						target="_blank"

@@ -1,0 +1,117 @@
+---
+title: Internationalization (i18n)
+description: Multi-language support in RNJet using i18next.
+---
+
+# Internationalization
+
+RNJet uses `i18next` and `react-i18next` for multi-language support. English (`en`) and Indonesian (`id`) are included out of the box, with the selected language persisted via MMKV.
+
+---
+
+## File Structure
+
+```
+src/i18n/
+├── index.ts           # i18n init
+└── welcome/
+    ├── en.json        # English translations
+    └── id.json        # Indonesian translations
+```
+
+---
+
+## Using Translations
+
+Use the `useTypedTranslation` hook in any component:
+
+```tsx
+import { useTypedTranslation } from "@hooks";
+
+export default function HomeScreen() {
+	const { translate } = useTypedTranslation();
+
+	return <Text>{translate("welcome:greeting")}</Text>;
+}
+```
+
+---
+
+## Translation Files
+
+Translations are nested JSON objects:
+
+```json
+// src/i18n/welcome/en.json
+{
+	"welcome:greeting": "Welcome",
+	"welcome:description": "Production-grade CLI tool and boilerplate system for React Native",
+	"welcome:switchLightMode": "Switch to Light Mode",
+	"welcome:switchDarkMode": "Switch to Dark Mode",
+	"welcome:indonesian": "Indonesian",
+	"welcome:english": "English"
+}
+```
+
+```json
+// src/i18n/welcome/id.json
+{
+	"welcome:greeting": "Selamat Datang",
+	"welcome:description": "Alat CLI profesional siap produksi dan sistem boilerplate canggih untuk React Native",
+	"welcome:switchLightMode": "Beralih ke Mode Terang",
+	"welcome:switchDarkMode": "Beralih ke Mode Gelap",
+	"welcome:indonesian": "Bahasa Indonesia",
+	"welcome:english": "Bahasa Inggris"
+}
+```
+
+---
+
+## Switching Languages
+
+```tsx
+import { useTypedTranslation } from "@hooks";
+
+const { i18n } = useTypedTranslation();
+
+// Switch to Indonesian
+i18n.changeLanguage("id");
+
+// Switch to English
+i18n.changeLanguage("en");
+```
+
+The selected language is automatically persisted — users won't need to re-select it on the next app launch.
+
+---
+
+## Adding a New Language
+
+1. Create a new translation file:
+
+```bash
+touch src/i18n/welcome/fr.json
+```
+
+2. Add your translations:
+
+```json
+{
+	"welcome:greeting": "Bienvenue",
+	"welcome:description": "Outil CLI et système de boilerplate prêt pour la production pour React Native",
+	"welcome:switchLightMode": "Passer en mode clair",
+	"welcome:switchDarkMode": "Passer en mode sombre",
+	"welcome:indonesian": "Indonésien",
+	"welcome:english": "Anglais"
+}
+```
+
+3. Register it in `src/i18n/welcome/index.ts`:
+
+```ts
+import en from "./en.json";
+import id from "./id.json";
+import fr from "./fr.json"; // ← add this
+
+export { en, id, fr };
+```

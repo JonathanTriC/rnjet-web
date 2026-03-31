@@ -4,7 +4,7 @@ const FooterLink = [
 		label: "GitHub",
 		href: "https://github.com/jonathantric/rnjet-boilerplate/",
 	},
-	{ label: "Docs", href: "" },
+	{ label: "Docs", href: "/docs" },
 ];
 const Footer = () => (
 	<footer className="border-t border-border py-8 px-6">

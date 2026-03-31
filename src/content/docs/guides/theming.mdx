@@ -1,0 +1,86 @@
+---
+title: Theming
+description: Light and dark theme support in RNJet.
+---
+
+# Theming
+
+RNJet ships with a fully wired light/dark theme system. Theme tokens are defined in `src/theme/` and consumed throughout the app via a theme hook.
+
+---
+
+## How It Works
+
+The theme system is built on top of React Native's `Appearance` API, with the selected preference persisted via MMKV so it survives app restarts.
+
+```
+src/theme/
+├── dark.ts         # Color tokens for dark mode
+├── light.ts        # Color tokens for light mode
+└── text-theme.ts   # Font sizes and weights
+```
+
+---
+
+## Using the Theme
+
+Use the `useTheme` hook anywhere in your app to access the current theme tokens:
+
+```tsx
+import { useTheme } from "@hooks";
+
+export default function MyComponent() {
+	const { theme } = useTheme();
+
+	return (
+		<View style={{ backgroundColor: theme.background }}>
+			<Text style={{ color: theme.text.primary }}>Hello</Text>
+		</View>
+	);
+}
+```
+
+---
+
+## Toggling the Theme
+
+The generated demo app in `src/modules` includes a working theme toggle. To toggle programmatically:
+
+```tsx
+import { useTheme } from '@hooks';
+
+const { toggleTheme, scheme } = useTheme();
+const isDark = scheme === 'dark'
+
+<Switch value={isDark} onValueChange={toggleTheme} />
+```
+
+---
+
+## Customizing Colors
+
+Edit `src/theme/light.ts` to change the color tokens for light mode:
+
+```ts
+export const lightTheme = {
+  background: '#ffffff',
+  text: {
+    primary: '#000000',
+    secondary: '#8E8E93',
+  },
+  // ...
+};
+
+And edit `src/theme/dark.ts` to change the color tokens for dark mode:
+export const darkTheme = {
+  background: '#000000',
+  text: {
+    primary: '#ffffff',
+    secondary: '#8E8E93',
+  },
+  // ...
+};
+
+```
+
+Any component using `useTheme().theme` will automatically reflect your changes in both modes.

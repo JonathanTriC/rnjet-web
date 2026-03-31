@@ -1,0 +1,94 @@
+---
+title: Project Structure
+description: A breakdown of the generated folder structure and what lives where.
+---
+
+# Project Structure
+
+RNJet generates a feature-friendly, scalable folder structure inside `src/`. Here's what each directory is for:
+
+```
+src/
+├── api/            # API layer (axios instance + request wrappers)
+├── assets/         # Images, icons, fonts
+├── components/     # Reusable UI components
+├── constants/      # Global helpers, config values, and constants
+├── hooks/          # Custom React hooks
+├── i18n/           # Localization (translations + i18next config)
+├── modules/        # Feature modules (screens, logic per feature)
+├── navigation/     # React Navigation setup and route definitions
+├── theme/          # Light / dark theme tokens and styles
+└── types/          # Global TypeScript types and interfaces
+```
+
+---
+
+## `api/`
+
+Contains the Axios instance and all request wrapper utilities. Environment-aware — automatically uses the correct base URL depending on whether you're in development or production.
+
+---
+
+## `assets/`
+
+Static files: images, app icon sources, custom fonts. Referenced throughout the app via constants to avoid magic strings.
+
+---
+
+## `components/`
+
+Shared, reusable UI components that are not tied to any specific feature. Things like buttons, inputs, cards, and typography components live here.
+
+---
+
+## `constants/`
+
+Global styles, helper functions, and any app-wide constants. A good place to put things like storage keys, url, or shared utility functions.
+
+---
+
+## `hooks/`
+
+Custom React hooks. Anything you'd want to reuse across multiple screens or modules — things like `useTheme`, `useTypedTranslation`, or `useNavigation`.
+
+---
+
+## `i18n/`
+
+All localization config and translation files. RNJet ships with English (`en`) and Indonesian (`id`) out of the box. Add new languages by creating additional translation JSON files here.
+
+---
+
+## `modules/`
+
+The heart of your app. Each feature gets its own folder here with its own screens, components, and logic. This is where you do most of your development.
+
+```
+modules/
+└── main/
+    ├── components/
+    └── screen/
+        └── home/
+            ├── HomeScreen.tsx
+            ├── index.tsx
+            ├── styles.tsx
+            └── useHomeScreen.tsx
+```
+
+---
+
+## `navigation/`
+
+React Navigation stack, and tab setup. Route names and navigator composition all live here.
+
+---
+
+## `theme/`
+
+Light and dark theme definitions. Colors and typography are defined here and consumed via the theme context throughout the app.
+
+---
+
+## `types/`
+
+Global TypeScript type definitions.
