@@ -38,7 +38,7 @@ const HeroSection = () => {
 							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
 							<span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
 						</span>
-						v1.1.0 is now available
+						v1.1.2 is now available
 						<ArrowRight size={14} />
 					</a>
 				</div>
