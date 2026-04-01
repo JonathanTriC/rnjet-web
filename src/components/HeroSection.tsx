@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Check, BookOpen, ArrowRight } from "lucide-react";
+import { Copy, Check, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -15,7 +15,10 @@ const HeroSection = () => {
 	};
 
 	return (
-		<section className="relative overflow-hidden pt-32 pb-20 px-6">
+		<section
+			className="relative overflow-hidden pt-32 pb-20 px-6"
+			aria-label="Hero"
+		>
 			<div className="noise-overlay" />
 
 			{/* Radial cyan glow */}
@@ -28,32 +31,36 @@ const HeroSection = () => {
 			/>
 
 			<div className="relative z-10 max-w-3xl mx-auto text-center">
-				{/* Version badge */}
+				{/* Version badge — links to GitHub releases */}
 				<div className="hero-fade-1 flex justify-center mb-8">
 					<a
-						href="#"
+						href="https://github.com/jonathantric/rnjet-boilerplate/releases"
+						target="_blank"
+						rel="noopener noreferrer"
 						className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-medium mb-8 animate-fade-up hover:bg-sky-500/20 transition-colors"
 					>
 						<span className="flex h-2 w-2 relative">
 							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
 							<span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
 						</span>
-						v1.1.2 is now available
-						<ArrowRight size={14} />
+						v1.1.2 is now available — see what&apos;s new →
 					</a>
 				</div>
 
 				<h1 className="hero-fade-2 font-heading font-extrabold text-5xl md:text-6xl lg:text-[64px] leading-[1.08] text-foreground mb-6">
-					Production-Ready React Native Apps{" "}
+					The React Native Boilerplate That Gets You to{" "}
 					<span className="text-transparent bg-clip-text bg-linear-to-r from-sky-400 to-sky-200">
-						in Seconds.
+						Features on Day One.
 					</span>
 				</h1>
 
 				<p className="hero-fade-3 font-body text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
-					Bootstrap scalable, clean, and fully-configured mobile apps with modern
-					architecture. Stop wasting time on setup and start building features
-					immediately.
+					Tired of spending 2 weeks configuring navigation, themes, and API
+					layers before writing a single feature?{" "}
+					<strong className="text-foreground">RNJet</strong> bootstraps a
+					fully-configured, production-grade React Native starter kit — Clean
+					Architecture, New Architecture, i18next, MMKV, React Navigation —
+					wired up in one command.
 				</p>
 
 				{/* Terminal block */}
@@ -70,10 +77,11 @@ const HeroSection = () => {
 						<span className="text-xs text-muted-foreground font-body">ZSH</span>
 						<button
 							onClick={handleCopy}
+							aria-label="Copy install command"
 							className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors font-body"
 						>
 							{copied ? <Check size={13} /> : <Copy size={13} />}
-							{copied ? "Copied!" : ""}
+							{copied ? "Copied!" : "Copy"}
 						</button>
 					</div>
 					<div className="p-6 text-left font-mono text-sm overflow-x-auto whitespace-nowrap">
@@ -84,13 +92,12 @@ const HeroSection = () => {
 					</div>
 				</div>
 
-				{/* Two CTA buttons */}
 				<div className="hero-fade-5 flex items-center justify-center gap-4 flex-wrap">
 					<Link
-						href="/docs"
+						href="/docs/getting-started/installation"
 						className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-medium transition-all shadow-lg shadow-sky-500/20 tracking-tight text-sm"
 					>
-						Read the Docs
+						Get Started Free
 						<BookOpen size={16} />
 					</Link>
 					<a
@@ -99,6 +106,16 @@ const HeroSection = () => {
 						rel="noopener noreferrer"
 						className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-all tracking-tight text-sm"
 					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+						</svg>
 						View on GitHub
 					</a>
 				</div>

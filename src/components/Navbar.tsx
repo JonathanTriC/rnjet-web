@@ -33,9 +33,6 @@ const Navbar = () => {
 					>
 						GitHub
 					</a>
-					<button className="w-9 h-9 flex items-center justify-center rounded-lg border border-border hover:bg-secondary transition-colors">
-						<Moon size={16} className="text-muted-foreground" />
-					</button>
 				</div>
 			</div>
 		</nav>

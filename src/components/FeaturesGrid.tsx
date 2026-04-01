@@ -9,43 +9,44 @@ import {
 	Database,
 	Navigation,
 } from "lucide-react";
+import Link from "next/link";
 
 const features = [
 	{
 		icon: Terminal,
-		title: "CLI-based generator",
-		desc:
-			"Instantly generate modules, components, and services with standard-compliant naming conventions.",
+		title: "React Native Module Generator CLI",
+		desc: "Instantly scaffold modules, components, and services with a single command — standard-compliant naming conventions enforced automatically.",
+		href: "/docs/architecture/project-structure",
 	},
 	{
 		icon: Cpu,
-		title: "New Architecture Ready",
-		desc:
-			"Built from the ground up to support Fabric and JSI for near-native performance levels.",
+		title: "React Native New Architecture (Fabric + JSI)",
+		desc: "Built from the ground up to support Fabric and JSI. Near-native performance levels out of the box — no migration needed.",
+		href: "/docs/architecture/tech-stack",
 	},
 	{
 		icon: Layers,
-		title: "Clean & Scalable Architecture",
-		desc:
-			"Enforced separation of concerns using a modular folder structure that scales with your team.",
+		title: "Clean Architecture — Feature-Based Folder Structure",
+		desc: "Enforced separation of concerns with a modular folder structure. Scales cleanly from solo projects to large teams.",
+		href: "/docs/architecture/project-structure",
 	},
 	{
 		icon: Globe,
-		title: "Multi-language (i18n)",
-		desc:
-			"Full internationalization support baked in with i18next and type-safe translation keys.",
+		title: "i18n in React Native with i18next — Built In",
+		desc: "Full internationalization with i18next and type-safe translation keys. English and Bahasa Indonesia included. Add any language in minutes.",
+		href: "/docs/guides/i18n",
 	},
 	{
 		icon: Database,
-		title: "Persistent Storage (MMKV)",
-		desc:
-			"Ultra-fast synchronous storage powered by MMKV, outperforming traditional Async Storage.",
+		title: "MMKV Storage — Faster Than AsyncStorage",
+		desc: "Ultra-fast synchronous storage powered by MMKV with AES-256 encryption. No async/await, no headaches — orders of magnitude faster.",
+		href: "/docs/architecture/tech-stack",
 	},
 	{
 		icon: Navigation,
-		title: "React Navigation Setup",
-		desc:
-			"Production-ready navigation setup with React Navigation, fully wired and ready to extend.",
+		title: "React Navigation v7 Pre-Configured Setup",
+		desc: "Production-ready navigation with typed screens, nested stacks, and a useNavigate hook — fully wired and ready to extend.",
+		href: "/docs/architecture/tech-stack",
 	},
 ];
 
@@ -70,7 +71,16 @@ const FeaturesGrid = () => {
 	}, []);
 
 	return (
-		<section className="py-20 px-6">
+		<section className="py-20 px-6" aria-label="Features">
+			<div className="max-w-6xl mx-auto mb-12 text-center">
+				<h2 className="font-heading font-extrabold text-3xl md:text-4xl text-foreground mb-4">
+					Everything a Production React Native App Needs
+				</h2>
+				<p className="font-body text-muted-foreground text-lg max-w-2xl mx-auto">
+					Stop making the same configuration decisions on every project. RNJet
+					packages 6 weeks of setup into a single command.
+				</p>
+			</div>
 			<div
 				ref={gridRef}
 				className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5"
@@ -78,9 +88,10 @@ const FeaturesGrid = () => {
 				{features.map((f, i) => {
 					const Icon = f.icon;
 					return (
-						<div
+						<Link
+							href={f.href}
 							key={i}
-							className="bg-card rounded-xl p-6 border border-border hover:border-primary hover:bg-card/80 transition-all duration-200"
+							className="group bg-card rounded-xl p-6 border border-border hover:border-primary hover:bg-card/80 transition-all duration-200 block"
 							style={{
 								opacity: visible ? 1 : 0,
 								transform: visible ? "translateY(0)" : "translateY(32px)",
@@ -88,13 +99,13 @@ const FeaturesGrid = () => {
 							}}
 						>
 							<Icon size={24} className="text-primary mb-4" />
-							<h3 className="font-heading font-bold text-foreground text-lg mb-2">
+							<h3 className="font-heading font-bold text-foreground text-lg mb-2 group-hover:text-primary transition-colors">
 								{f.title}
 							</h3>
 							<p className="font-body text-sm text-muted-foreground leading-relaxed">
 								{f.desc}
 							</p>
-						</div>
+						</Link>
 					);
 				})}
 			</div>

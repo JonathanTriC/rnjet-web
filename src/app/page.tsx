@@ -2,7 +2,18 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturesGrid from "@/components/FeaturesGrid";
 import PhoneMockups from "@/components/PhoneMockups";
+import WhySection from "@/components/WhySection";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "RNJet — React Native Boilerplate & CLI Starter Kit",
+	description:
+		"Skip weeks of React Native setup. RNJet is a production-ready boilerplate & CLI with Clean Architecture, i18n, MMKV storage, React Navigation & New Architecture — bootstrapped in one command.",
+	alternates: {
+		canonical: "https://rnjet.jonathantri.com",
+	},
+};
 
 export default function Home() {
 	return (
@@ -13,6 +24,7 @@ export default function Home() {
 			<HeroSection />
 			<PhoneMockups />
 			<FeaturesGrid />
+			<WhySection />
 			<Footer />
 		</main>
 	);
