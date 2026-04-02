@@ -25,6 +25,8 @@ export const metadata: Metadata = {
 		"react native scaffold",
 		"npx react native boilerplate",
 		"rnjet",
+		"jonathan tri",
+		"jonathantri",
 	],
 	authors: [{ name: "Jonathan Tri", url: "https://jonathantri.com" }],
 	creator: "Jonathan Tri",
