@@ -1,0 +1,170 @@
+---
+title: AppBottomSheetModal
+description: Theme-aware, ref-controlled bottom sheet modal component for RNJet.
+---
+
+# AppBottomSheetModal
+
+A pre-configured bottom sheet modal built on `@gorhom/bottom-sheet` — with theming, safe-area handling, a built-in header with close button, and optional scrollable content.
+
+---
+
+## Props
+
+| Prop                | Type                       | Default | Description                                                                 |
+| ------------------- | -------------------------- | ------- | --------------------------------------------------------------------------- |
+| `title`             | `string`                   | —       | Title displayed in the header bar                                           |
+| `children`          | `ReactNode`                | **required** | Content rendered inside the sheet                                      |
+| `maxOffsetFromTop`  | `number`                   | `10`    | Extra pixels below the top safe-area inset — limits how far up the sheet can expand |
+| `enableScroll`      | `boolean`                  | `true`  | Wraps content in `BottomSheetScrollView`; set to `false` for fixed-height sheets |
+| `onDismiss`         | `() => void`               | —       | Callback fired when the modal is dismissed                                  |
+| `snapPoints`        | `BottomSheetModalProps['snapPoints']` | —  | Snap point array (e.g. `['50%', '90%']`); omit to enable dynamic sizing |
+
+All other `BottomSheetModalProps` (except `children`) are supported via spread.
+
+---
+
+## Ref Handle
+
+The component exposes an imperative handle via `ref`. Use `useRef<AppBottomSheetModalHandle>()` to control it:
+
+```ts
+type AppBottomSheetModalHandle = {
+  present: () => void;
+  dismiss: () => void;
+};
+```
+
+| Method    | Description                    |
+| --------- | ------------------------------ |
+| `present` | Opens the bottom sheet modal   |
+| `dismiss` | Closes the bottom sheet modal  |
+
+---
+
+## Usage
+
+**Basic usage:**
+
+```tsx
+import { useRef } from "react";
+import { AppBottomSheetModal, AppBottomSheetModalHandle } from "@components/app-bottom-sheet-modal";
+
+const MyScreen = () => {
+  const sheetRef = useRef<AppBottomSheetModalHandle>(null);
+
+  return (
+    <>
+      <Button onPress={() => sheetRef.current?.present()}>
+        Open Sheet
+      </Button>
+
+      <AppBottomSheetModal ref={sheetRef} title="Select Option">
+        <Text>Sheet content goes here</Text>
+      </AppBottomSheetModal>
+    </>
+  );
+};
+```
+
+**With snap points:**
+
+```tsx
+<AppBottomSheetModal
+  ref={sheetRef}
+  title="Details"
+  snapPoints={["40%", "80%"]}
+>
+  <Text>Content that snaps to 40% or 80% of the screen</Text>
+</AppBottomSheetModal>
+```
+
+When `snapPoints` is omitted, the sheet uses **dynamic sizing** — it automatically sizes to fit its content.
+
+**Fixed-height (non-scrollable):**
+
+```tsx
+<AppBottomSheetModal
+  ref={sheetRef}
+  title="Confirmation"
+  enableScroll={false}
+>
+  <Text>Are you sure?</Text>
+  <Button onPress={handleConfirm}>Confirm</Button>
+</AppBottomSheetModal>
+```
+
+**With dismiss callback:**
+
+```tsx
+<AppBottomSheetModal
+  ref={sheetRef}
+  title="Filter"
+  onDismiss={() => applyFilters()}
+>
+  {/* filter controls */}
+</AppBottomSheetModal>
+```
+
+**Controlling top offset:**
+
+```tsx
+<AppBottomSheetModal
+  ref={sheetRef}
+  title="Full Sheet"
+  maxOffsetFromTop={0}
+>
+  {/* content that can expand almost to the top of the screen */}
+</AppBottomSheetModal>
+```
+
+---
+
+## Header
+
+Every sheet renders a header bar containing:
+
+1. **Title** (center) — rendered only when the `title` prop is provided
+2. **Close button** (right) — an `×` icon that calls `dismiss()` on press
+
+The header is sticky when scrolling is enabled (`stickyHeaderIndices={[0]}`), so it remains visible as the user scrolls through content.
+
+---
+
+## Scroll vs. Fixed Content
+
+| `enableScroll` | Wrapper Component        | Behavior                                              |
+| -------------- | ------------------------ | ----------------------------------------------------- |
+| `true` (default) | `BottomSheetScrollView` | Content scrolls vertically; header stays pinned at top |
+| `false`        | `BottomSheetView`        | Content is static; use for short, fixed-height sheets  |
+
+---
+
+## Keyboard Handling
+
+The component is pre-configured for keyboard-friendly behavior:
+
+- `keyboardBehavior="interactive"` — the sheet adjusts as the keyboard animates in
+- `keyboardBlurBehavior="restore"` — the sheet returns to its previous snap point when the keyboard dismisses
+- `android_keyboardInputMode="adjustResize"` — ensures Android resizes the sheet instead of panning
+
+This makes it safe to use `TextField` components with `useBottomSheet` inside the sheet.
+
+---
+
+## Dynamic vs. Fixed Sizing
+
+| Configuration             | Behavior                                                    |
+| ------------------------- | ----------------------------------------------------------- |
+| `snapPoints` omitted      | `enableDynamicSizing` is automatically set to `true` — the sheet heights to fit its content |
+| `snapPoints` provided     | Sheet snaps to the defined points (e.g. `['25%', '50%']`)  |
+
+---
+
+## Notes
+
+- The component uses `useSafeAreaInsets` internally to respect the device's safe area, applying `topInset` and bottom padding automatically
+- `enablePanDownToClose` is always enabled — users can swipe down to dismiss
+- The backdrop fades in on `appearsOnIndex={0}` and fades out on `disappearsOnIndex={-1}`
+- Background color is set to `theme.background` for automatic light/dark mode support
+- The vertical scroll indicator is hidden by default for a cleaner look

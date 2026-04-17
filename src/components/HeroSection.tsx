@@ -43,7 +43,7 @@ const HeroSection = () => {
 							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
 							<span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
 						</span>
-						v1.1.2 is now available — see what&apos;s new →
+						v1.1.3 is now available — see what&apos;s new →
 					</a>
 				</div>
 
@@ -55,12 +55,12 @@ const HeroSection = () => {
 				</h1>
 
 				<p className="hero-fade-3 font-body text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
-					Tired of spending 2 weeks configuring navigation, themes, and API
-					layers before writing a single feature?{" "}
+					Tired of spending 2 weeks configuring navigation, themes, and API layers
+					before writing a single feature?{" "}
 					<strong className="text-foreground">RNJet</strong> bootstraps a
 					fully-configured, production-grade React Native starter kit — Clean
-					Architecture, New Architecture, i18next, MMKV, React Navigation —
-					wired up in one command.
+					Architecture, New Architecture, i18next, MMKV, React Navigation — wired up
+					in one command.
 				</p>
 
 				{/* Terminal block */}

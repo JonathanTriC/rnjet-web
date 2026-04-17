@@ -1,0 +1,184 @@
+---
+title: Button
+description: Theme-aware, variant-driven button component for RNJet.
+---
+
+# Button
+
+A versatile, theme-aware button with built-in support for outline, danger, success, and disabled variants — plus optional icons and fully customizable styling.
+
+---
+
+## Props
+
+### Core
+
+| Prop       | Type           | Default        | Description                                    |
+| ---------- | -------------- | -------------- | ---------------------------------------------- |
+| `label`    | `string`       | —              | Button text                                    |
+| `action`   | `() => void`   | —              | Callback fired on press                        |
+| `children` | `ReactNode`    | —              | Custom content — replaces `label` when provided |
+| `testID`   | `string`       | —              | Test identifier for e2e testing                |
+
+### Variants
+
+| Prop           | Type      | Default | Description                                          |
+| -------------- | --------- | ------- | ---------------------------------------------------- |
+| `outline`      | `boolean` | `false` | Renders a bordered button with transparent background |
+| `danger`       | `boolean` | `false` | Uses `danger.base` as the background color           |
+| `success`      | `boolean` | `false` | Uses `success.base` as the background color          |
+| `primaryLight` | `boolean` | `false` | Uses `primary.base` as background with `neutral.base` text |
+
+Variant priority (highest → lowest): `isDisabled` → `outline` → `danger` → `success` → `primaryLight` → `background`.
+
+### Icons
+
+| Prop       | Type  | Default | Description                                              |
+| ---------- | ----- | ------- | -------------------------------------------------------- |
+| `icon`     | `any` | —       | Image source rendered to the left of the label (via `Image`) |
+| `iconLeft` | `any` | —       | Custom element rendered to the left of the label (via `View`) |
+
+### Styling
+
+| Prop          | Type                           | Default          | Description                              |
+| ------------- | ------------------------------ | ---------------- | ---------------------------------------- |
+| `color`       | `string`                       | `theme.white`    | Text color                               |
+| `background`  | `string`                       | `theme.primary.base` | Background color (when no variant is active) |
+| `fontSize`    | `number`                       | `16`             | Font size for the label                  |
+| `borderColor` | `string`                       | `theme.neutral.base` | Border color                         |
+| `borderWidth` | `number`                       | `0`              | Border width (auto-set to `1` for `outline`) |
+| `padding`     | `ViewStyle['padding']`         | —                | Custom padding override                  |
+| `margin`      | `ViewStyle['margin']`          | —                | Custom margin override                   |
+| `top`         | `number`                       | `0`              | `marginTop` shorthand                    |
+| `bottom`      | `number`                       | `0`              | `marginBottom` shorthand                 |
+| `style`       | `TouchableOpacityProps['style']` | `{}`           | Additional styles merged into the container |
+| `textStyle`   | `StyleProp<TextStyle>`         | —                | Additional styles merged into the label  |
+
+### State
+
+| Prop             | Type      | Default | Description                                            |
+| ---------------- | --------- | ------- | ------------------------------------------------------ |
+| `isDisabled`     | `boolean` | `false` | Disables the button and applies disabled styling       |
+| `customDisabled` | `boolean` | `false` | Disables press without changing the visual appearance  |
+
+---
+
+## Usage
+
+**Primary button:**
+
+```tsx
+<Button label="Continue" action={handleContinue} />
+```
+
+**Outline button:**
+
+```tsx
+<Button label="Cancel" outline action={handleCancel} />
+```
+
+**Danger button:**
+
+```tsx
+<Button label="Delete Account" danger action={handleDelete} />
+```
+
+**Success button:**
+
+```tsx
+<Button label="Confirm" success action={handleConfirm} />
+```
+
+**Disabled button:**
+
+```tsx
+<Button label="Submit" isDisabled action={handleSubmit} />
+```
+
+**With left icon (image source):**
+
+```tsx
+<Button
+  label="Sign in with Google"
+  icon={require("@assets/google.png")}
+  action={handleGoogleSignIn}
+/>
+```
+
+**With left icon (custom element):**
+
+```tsx
+<Button
+  label="Add to Cart"
+  iconLeft={<MaterialDesignIcons name="cart" size={20} color="white" />}
+  action={handleAddToCart}
+/>
+```
+
+**Custom children:**
+
+```tsx
+<Button action={handlePress}>
+  <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+    <Icon name="star" />
+    <Text>Custom Content</Text>
+  </View>
+</Button>
+```
+
+When `children` is provided, it completely replaces the default `label` text.
+
+**Custom colors:**
+
+```tsx
+<Button
+  label="Special"
+  color="#FFFFFF"
+  background="#6C63FF"
+  action={handlePress}
+/>
+```
+
+**With spacing:**
+
+```tsx
+<Button label="Next" top={16} bottom={8} action={handleNext} />
+```
+
+---
+
+## Variants
+
+The button's background and text colors change depending on which variant prop is active:
+
+| Variant        | Background              | Text Color            | Border              |
+| -------------- | ----------------------- | --------------------- | ------------------- |
+| *(default)*    | `background` prop       | `color` prop          | none                |
+| `outline`      | transparent             | `neutral.base`        | `neutral.base` (1px)|
+| `danger`       | `danger.base`           | white                 | none                |
+| `success`      | `success.base`          | white                 | none                |
+| `primaryLight` | `primary.base`          | `neutral.base`        | none                |
+| `isDisabled`   | `neutral.disabled`      | `neutral.secondary`   | none                |
+
+---
+
+## Disabled States
+
+The component supports two types of disabled behavior:
+
+| Prop             | Visually disabled? | Press disabled? | Use case                                      |
+| ---------------- | ------------------ | --------------- | --------------------------------------------- |
+| `isDisabled`     | ✅                 | ✅              | Standard disabled state with grayed-out styling |
+| `customDisabled` | ❌                 | ✅              | Block interaction while keeping the styled look (e.g. during loading) |
+
+Both props disable `onPress` via `TouchableOpacity`'s `disabled` prop.
+
+---
+
+## Notes
+
+- `borderRadius` is always `12`
+- Font is `Montserrat-Bold` with `fontWeight: '600'`
+- `allowFontScaling` is `false` — prevents system font size from affecting button text
+- The `icon` prop expects an image source (used with `Image`), while `iconLeft` accepts any React element (used with `View`)
+- The `children` prop takes priority over `label` — when provided, only `children` is rendered

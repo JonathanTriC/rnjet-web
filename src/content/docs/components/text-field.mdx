@@ -1,0 +1,215 @@
+---
+title: TextField
+description: Theme-aware, feature-rich text input component for RNJet.
+---
+
+# TextField
+
+A fully-featured text input built on top of `react-native-paper`'s `TextInput` — with theming, validation states, secure entry, bottom-sheet support, and flexible icon slots.
+
+---
+
+## Props
+
+### Core
+
+| Prop             | Type                       | Default     | Description                                      |
+| ---------------- | -------------------------- | ----------- | ------------------------------------------------ |
+| `value`          | `any`                      | —           | Current input value                              |
+| `onChangeText`   | `(text: string) => void`   | **required**| Callback fired when text changes                 |
+| `defaultValue`   | `string`                   | —           | Default value for uncontrolled usage             |
+| `placeholder`    | `string`                   | —           | Placeholder text                                 |
+| `maxLength`      | `any`                      | —           | Maximum character length                         |
+| `editable`       | `boolean`                  | —           | Whether the input is editable                    |
+| `disabled`       | `any`                      | —           | Disables the input and adjusts styling           |
+| `multiline`      | `any`                      | `false`     | Enables multi-line input                         |
+| `inputMode`      | `TextInputProps['inputMode']` | —        | Controls the virtual keyboard type (e.g. `numeric`, `email`) |
+| `keyboardType`   | `TextInputProps['keyboardType']` | `"default"` | Keyboard layout type                       |
+| `returnKeyType`  | `ReturnKeyTypeOptions`     | —           | Return key label (e.g. `done`, `next`, `go`)     |
+| `testID`         | `string`                   | —           | Test identifier for e2e testing                  |
+
+### Label & Messaging
+
+| Prop                  | Type              | Default | Description                                   |
+| --------------------- | ----------------- | ------- | --------------------------------------------- |
+| `label`               | `string`          | —       | Label displayed above the input               |
+| `labelColor`          | `ThemeType`       | `neutral.base` | Theme color token for the label        |
+| `required`            | `boolean`         | —       | Shows a red asterisk `*` next to the label    |
+| `subLabel`            | `string`          | —       | Helper text displayed below the input         |
+| `subLabelStyle`       | `any`             | —       | Style override for the sub-label              |
+| `errorMessage`        | `string`          | —       | Error text — also sets red outline            |
+| `errorMessageStyle`   | `any`             | —       | Style override for the error message          |
+| `successMessage`      | `string`          | —       | Success text — also sets green outline        |
+| `successMessageStyle` | `any`             | —       | Style override for the success message        |
+| `error`               | `boolean`         | —       | Triggers error state on the underlying `TextInput` |
+
+### Icons
+
+| Prop               | Type          | Default         | Description                                        |
+| ------------------ | ------------- | --------------- | -------------------------------------------------- |
+| `leftIcon`         | `any`         | —               | Icon rendered on the left side of the input        |
+| `leftIconColor`    | `ThemeType`   | `neutral.base`  | Theme color token for the left icon                |
+| `leftOnPressIcon`  | `any`         | —               | Callback when the left icon is pressed             |
+| `rightIcon`        | `any`         | —               | Icon rendered on the right side of the input       |
+| `iconColor`        | `ThemeType`   | `neutral.base`  | Theme color token for the right icon               |
+| `onPressIcon`      | `() => void`  | —               | Callback when the right icon is pressed            |
+| `disabledRightIcon`| `boolean`     | —               | Disables interaction on the right icon             |
+| `customRightText`  | `JSX.Element` | —               | Custom element rendered in the right slot (used when no `rightIcon` or `secure`) |
+
+### Styling
+
+| Prop                   | Type        | Default              | Description                                         |
+| ---------------------- | ----------- | -------------------- | --------------------------------------------------- |
+| `borderColor`          | `ThemeType` | `"transparent"`      | Outline border color                                |
+| `backgroundColor`      | `ThemeType` | theme-dependent      | Input background (falls back to outline/disabled styles) |
+| `borderRadius`         | `any`       | `12`                 | Corner radius of the input outline                  |
+| `placeholderTextColor` | `ThemeType` | `neutral.secondary`  | Color of the placeholder text                       |
+| `inputTextStyle`       | `any`       | —                    | Additional styles merged into the input             |
+| `isNotOutline`         | `boolean`   | —                    | Switches to a filled style (no outline mode)        |
+| `top`                  | `number`    | `0`                  | `marginTop` for the wrapper                         |
+| `bottom`               | `number`    | `0`                  | `marginBottom` for the wrapper                      |
+
+### Behavior
+
+| Prop              | Type                                  | Default  | Description                                          |
+| ----------------- | ------------------------------------- | -------- | ---------------------------------------------------- |
+| `secure`          | `boolean`                             | —        | Enables secure text entry with visibility toggle     |
+| `maskEntry`       | `any`                                 | `false`  | Initial mask state — when `true`, text is visible by default |
+| `onBlur`          | `(e: any) => void`                    | —        | Callback when the input loses focus                  |
+| `onFocus`         | `(e: any) => void`                    | —        | Callback when the input gains focus                  |
+| `onSubmitEditing` | `TextInputProps['onSubmitEditing']`   | —        | Callback when the return key is pressed              |
+| `onEndEditing`    | `TextInputProps['onEndEditing']`      | —        | Callback when editing ends                           |
+| `onPress`         | `TextInputProps['onPressOut']`        | —        | Callback when the input area is pressed              |
+| `useBottomSheet`  | `boolean`                             | `false`  | Replaces the default input with `BottomSheetTextInput` for use inside `@gorhom/bottom-sheet` |
+
+---
+
+## Usage
+
+**Basic text field:**
+
+```tsx
+<TextField
+  label="Email"
+  placeholder="Enter your email"
+  value={email}
+  onChangeText={setEmail}
+/>
+```
+
+**Required field with error:**
+
+```tsx
+<TextField
+  label="Username"
+  required
+  placeholder="Pick a username"
+  value={username}
+  onChangeText={setUsername}
+  errorMessage={errors.username}
+/>
+```
+
+**Password field with secure entry:**
+
+```tsx
+<TextField
+  label="Password"
+  secure
+  placeholder="Enter your password"
+  value={password}
+  onChangeText={setPassword}
+/>
+```
+
+The `secure` prop automatically adds a visibility toggle icon on the right side. Users can tap it to reveal or hide the password.
+
+**With icons:**
+
+```tsx
+<TextField
+  label="Search"
+  leftIcon="search"
+  rightIcon="close"
+  onPressIcon={handleClear}
+  placeholder="Search..."
+  value={query}
+  onChangeText={setQuery}
+/>
+```
+
+**Success state:**
+
+```tsx
+<TextField
+  label="Email"
+  value={email}
+  onChangeText={setEmail}
+  successMessage="Email is available"
+/>
+```
+
+**Inside a bottom sheet:**
+
+```tsx
+<TextField
+  label="Note"
+  placeholder="Add a note..."
+  value={note}
+  onChangeText={setNote}
+  useBottomSheet
+/>
+```
+
+When `useBottomSheet` is `true`, the component renders `BottomSheetTextInput` from `@gorhom/bottom-sheet` instead of the default input, ensuring proper keyboard handling inside bottom sheets.
+
+**With spacing:**
+
+```tsx
+<TextField
+  label="First Name"
+  value={firstName}
+  onChangeText={setFirstName}
+  top={16}
+  bottom={8}
+/>
+```
+
+---
+
+## Validation States
+
+The input outline changes color based on validation state:
+
+- **Default** — `neutral.secondary` border
+- **Error** — `danger.base` border + error message rendered below
+- **Success** — `success.base` border + success message rendered below
+
+Only one state is shown at a time. `errorMessage` takes priority over `successMessage`.
+
+---
+
+## Secure Entry
+
+When `secure` is `true`:
+
+1. Text is hidden by default (`secureTextEntry`)
+2. A visibility toggle icon appears on the right
+3. The `maskEntry` prop controls the initial toggle state — set to `true` to show text by default
+4. If a `rightIcon` is also provided, it takes priority over the visibility toggle
+
+---
+
+## Bottom Sheet Support
+
+React Native text inputs don't work correctly inside `@gorhom/bottom-sheet` by default. Set `useBottomSheet={true}` to swap in `BottomSheetTextInput`, which handles focus and keyboard interactions properly within a bottom sheet context.
+
+---
+
+## Notes
+
+- The component width is set to `screenWidth - 40` (20px padding on each side)
+- `autoCapitalize` is always set to `"none"`
+- `submitBehavior` is set to `"blurAndSubmit"` — the input blurs and fires `onSubmitEditing` when return is pressed
+- On Android, `fontWeight` is `"bold"`; on iOS it's `"600"` — this accounts for cross-platform font rendering differences
+- All other `TextInputProps` from `react-native-paper` are supported via spread

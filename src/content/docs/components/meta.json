@@ -1,4 +1,4 @@
 {
 	"title": "Components",
-	"pages": ["text"]
+	"pages": ["text", "text-field", "button", "skeleton-loading", "app-bottom-sheet-modal"]
 }

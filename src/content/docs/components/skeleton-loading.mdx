@@ -1,0 +1,83 @@
+---
+title: SkeletonLoading
+description: Lightweight skeleton placeholder component for RNJet.
+---
+
+# SkeletonLoading
+
+A simple, configurable skeleton placeholder for content loading states — built on `react-native-skeleton-placeholder`.
+
+---
+
+## Props
+
+| Prop           | Type                    | Default  | Description                              |
+| -------------- | ----------------------- | -------- | ---------------------------------------- |
+| `width`        | `DimensionValue`        | `'100%'` | Width of the skeleton block              |
+| `height`       | `DimensionValue`        | `220`    | Height of the skeleton block             |
+| `borderRadius` | `number`                | `4`      | Corner radius of the skeleton block      |
+| `style`        | `StyleProp<ViewStyle>`  | —        | Style applied to the outer `View` wrapper |
+
+`DimensionValue` accepts numbers (pixels) or strings (`'100%'`, `'50%'`, etc.).
+
+---
+
+## Usage
+
+**Default (full-width card placeholder):**
+
+```tsx
+<SkeletonLoading />
+```
+
+Renders a `100% × 220` skeleton with `4px` border radius — suitable as a card or image placeholder.
+
+**Custom size:**
+
+```tsx
+<SkeletonLoading width={120} height={120} borderRadius={60} />
+```
+
+Creates a circular skeleton (e.g. avatar placeholder).
+
+**Percentage-based width:**
+
+```tsx
+<SkeletonLoading width="50%" height={16} borderRadius={8} />
+```
+
+Creates a half-width line skeleton (e.g. text placeholder).
+
+**With wrapper styling:**
+
+```tsx
+<SkeletonLoading
+  width="100%"
+  height={80}
+  borderRadius={12}
+  style={{ marginBottom: 16, paddingHorizontal: 20 }}
+/>
+```
+
+The `style` prop applies to the outer `View`, useful for spacing and alignment.
+
+**Composing a loading layout:**
+
+```tsx
+<View style={{ gap: 12, padding: 20 }}>
+  <SkeletonLoading width={48} height={48} borderRadius={24} />
+  <SkeletonLoading width="60%" height={14} borderRadius={4} />
+  <SkeletonLoading width="100%" height={14} borderRadius={4} />
+  <SkeletonLoading width="80%" height={14} borderRadius={4} />
+</View>
+```
+
+Combine multiple `SkeletonLoading` instances to build realistic loading placeholders that mirror your content layout.
+
+---
+
+## Notes
+
+- The shimmer animation is handled automatically by `react-native-skeleton-placeholder` — no additional configuration needed
+- Use the `style` prop for positioning (margins, padding, alignment); use `width`, `height`, and `borderRadius` for the skeleton shape itself
+- The component renders a single `SkeletonPlaceholder.Item` — for complex multi-item skeletons with shared animation timing, use `SkeletonPlaceholder` directly
